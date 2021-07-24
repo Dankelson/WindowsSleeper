@@ -16,12 +16,15 @@ import org.eclipse.swt.events.VerifyListener;
 
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 public class window {
 
 	protected Shell shlWindowsSleeper;
 	private Text hour;
 	private Text minutes;
+	private double version = 1.1;
 
 	/**
 	 * Launch the application.
@@ -67,14 +70,14 @@ public class window {
 		lblTimeSetFor.setText("Timer not set");
 		
 		Label label = new Label(shlWindowsSleeper, SWT.SEPARATOR | SWT.VERTICAL);
-		label.setBounds(294, 48, 18, 125);
+		label.setBounds(294, 56, 18, 125);
 		
 		DateTime dateTime = new DateTime(shlWindowsSleeper, SWT.BORDER | SWT.TIME);
-		dateTime.setBounds(28, 48, 114, 34);
+		dateTime.setBounds(28, 56, 114, 34);
 		
 		hour = new Text(shlWindowsSleeper, SWT.BORDER);
 		hour.setToolTipText("Hours");
-		hour.setBounds(28, 109, 76, 21);
+		hour.setBounds(28, 112, 76, 21);
 		hour.addVerifyListener(new VerifyListener() {
 	        @Override
 	        public void verifyText(VerifyEvent e) {
@@ -97,13 +100,9 @@ public class window {
 	        }
 	    });
 		
-		
-		
 		minutes = new Text(shlWindowsSleeper, SWT.BORDER);
 		minutes.setToolTipText("Minutes");
-		minutes.setBounds(27, 136, 76, 21);
-		
-		
+		minutes.setBounds(28, 139, 76, 21);
 		
 		minutes.addVerifyListener(new VerifyListener() {
 	        @Override
@@ -138,15 +137,13 @@ public class window {
 		endTimerButton.setBounds(382, 109, 75, 25);
 		endTimerButton.setText("End timer");
 		
-		
-		
 		Button btnUntilTime = new Button(shlWindowsSleeper, SWT.CHECK);
-		btnUntilTime.setBounds(173, 48, 93, 31);
+		btnUntilTime.setBounds(155, 56, 93, 31);
 		btnUntilTime.setText("Until this time");
 		
 		Button btnUntilAllotedTime = new Button(shlWindowsSleeper, SWT.CHECK);
 		btnUntilAllotedTime.setText("Until alloted time");
-		btnUntilAllotedTime.setBounds(173, 106, 115, 25);
+		btnUntilAllotedTime.setBounds(155, 109, 115, 25);
 		
 		btnUntilTime.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -163,20 +160,37 @@ public class window {
 		});
 		
 		Label lblHr = new Label(shlWindowsSleeper, SWT.NONE);
-		lblHr.setBounds(119, 111, 23, 15);
+		lblHr.setBounds(110, 114, 23, 15);
 		lblHr.setText("HR");
 		
 		Label lblMin = new Label(shlWindowsSleeper, SWT.NONE);
-		lblMin.setBounds(114, 138, 28, 15);
+		lblMin.setBounds(110, 141, 28, 15);
 		lblMin.setText("MIN");
 		
 		Button btnStart = new Button(shlWindowsSleeper, SWT.NONE);
-		btnStart.setBounds(28, 194, 75, 25);
+		btnStart.setBounds(110, 182, 75, 25);
 		btnStart.setText("Start timer");
 		
 		Label lblTimeSetFor_1 = new Label(shlWindowsSleeper, SWT.NONE);
 		lblTimeSetFor_1.setBounds(382, 56, 66, 15);
 		lblTimeSetFor_1.setText("Time set for:");
+		
+		ToolBar toolBar = new ToolBar(shlWindowsSleeper, SWT.NONE);
+		toolBar.setBounds(0, 0, 584, 23);
+		
+		ToolItem btnAbout = new ToolItem(toolBar, SWT.NONE);
+		btnAbout.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				dialog.setText("About");
+				dialog.setMessage("WindowsSleeper by Daniel Kelson                                                                 "
+								+ "A handy tool to schedule shutdowns in Windows "
+								+ "https://github.com/Dankelson/WindowsSleeper                                        "
+								+ "Version - " + version);
+				dialog.open();
+			}
+		});
+		btnAbout.setText("About");
 		btnStart.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -198,9 +212,6 @@ public class window {
 					int mins = 0;
 					
 					if(hour.getText() == "" && minutes.getText() == "") {
-						dialog.setText("Error");
-						dialog.setMessage("Please enter values for HR and MIN");
-						dialog.open();
 					}else if(minutes.getText() == "") {
 						hours = Integer.parseInt(hour.getText());
 						runTimerComponent(hours, mins);
@@ -215,7 +226,7 @@ public class window {
 						hours = Integer.parseInt(hour.getText());
 						mins = Integer.parseInt(minutes.getText());
 						runTimerComponent(hours, mins);
-						LocalTime now = LocalTime.now().plus(hours, ChronoUnit.HOURS).plus(mins, ChronoUnit.MINUTES);
+						LocalTime now = LocalTime.now().plus(hours, ChronoUnit.HOURS).plus(mins, ChronoUnit.MINUTES).truncatedTo(ChronoUnit.MINUTES);
 						lblTimeSetFor.setText(now.toString());
 					}
 					
